@@ -1,13 +1,29 @@
-import productos from './productos'
+import { useEffect, useState } from "react";
+import { supabase } from "./supabase";
+import Productos from "./productos"; // 👈 ¡Asegurate que el nombre del archivo tenga la P mayúscula!
 
 function App() {
+  const [productos, setProductos] = useState([]);
+
+  useEffect(() => {
+    async function fetchProductos() {
+      const { data, error } = await supabase.from("productos").select("*");
+      if (error) {
+        console.error("Error al cargar productos:", error);
+      } else {
+        setProductos(data);
+      }
+    }
+
+    fetchProductos();
+  }, []);
+
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-6">Catálogo de Insumos Eléctricos</h1>
-        <productos />
-      </div>
-    </main>
-  )
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Catálogo de Productos</h1>
+      <Productos productos={productos} />
+    </div>
+  );
 }
-export default App
+
+export default App;
