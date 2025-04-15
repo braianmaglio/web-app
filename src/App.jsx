@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
-import Productos from "./productos"; // 👈 ¡Asegurate que el nombre del archivo tenga la P mayúscula!
+import Productos from "./Productos"; // 👈 ¡Asegurate que el nombre del archivo tenga la P mayúscula!
 
 function App() {
   const [productos, setProductos] = useState([]);

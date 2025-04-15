@@ -13,7 +13,7 @@ export default function productos() {
         .order('creado_en', { ascending: false })
 
       if (error) console.error('Error cargando productos:', error)
-      else setProductos(data)
+      else setproductos(data)
     }
 
     fetchproductos()
