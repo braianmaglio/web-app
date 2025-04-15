@@ -1,4 +1,4 @@
-import Productos from './Productos'
+import Productos from './productos'
 
 function App() {
   return (
