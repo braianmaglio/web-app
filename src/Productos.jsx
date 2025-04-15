@@ -2,11 +2,11 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './supabase'
 
-export default function Productos() {
+export default function productos() {
   const [productos, setProductos] = useState([])
 
   useEffect(() => {
-    async function fetchProductos() {
+    async function fetchproductos() {
       const { data, error } = await supabase
         .from('productos')
         .select('*')
@@ -16,7 +16,7 @@ export default function Productos() {
       else setProductos(data)
     }
 
-    fetchProductos()
+    fetchproductos()
   }, [])
 
   return (
