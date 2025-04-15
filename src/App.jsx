@@ -1,28 +1,24 @@
-import { useEffect, useState } from "react";
-import { supabase } from "./supabase";
-import Productos from "./Productos"; // 👈 ¡Asegurate que el nombre del archivo tenga la P mayúscula!
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./Navbar";
+import Inicio from "./Inicio";
+import Productos from "./Productos";
+import NuevaVenta from "./NuevaVenta";
+import Reportes from "./Reportes";
 
 function App() {
-  const [productos, setProductos] = useState([]);
-
-  useEffect(() => {
-    async function fetchProductos() {
-      const { data, error } = await supabase.from("productos").select("*");
-      if (error) {
-        console.error("Error al cargar productos:", error);
-      } else {
-        setProductos(data);
-      }
-    }
-
-    fetchProductos();
-  }, []);
-
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Catálogo de Productos</h1>
-      <Productos productos={productos} />
-    </div>
+    <Router>
+      <Navbar />
+      <div className="p-4">
+        <Routes>
+          <Route path="/" element={<Inicio />} />
+          <Route path="/productos" element={<Productos />} />
+          <Route path="/ventas" element={<NuevaVenta />} />
+          <Route path="/reportes" element={<Reportes />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
