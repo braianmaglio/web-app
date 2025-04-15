@@ -6,17 +6,17 @@ export default function productos() {
   const [productos, setProductos] = useState([])
 
   useEffect(() => {
-    async function fetchproductos() {
+    async function fetchProductos() {
       const { data, error } = await supabase
         .from('productos')
         .select('*')
         .order('creado_en', { ascending: false })
 
       if (error) console.error('Error cargando productos:', error)
-      else setproductos(data)
+      else setProductos(data)
     }
 
-    fetchproductos()
+    fetchProductos()
   }, [])
 
   return (
