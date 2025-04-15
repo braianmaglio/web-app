@@ -1,7 +1,4 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 export default function App() {
   const [products, setProducts] = useState([
@@ -22,14 +19,17 @@ export default function App() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {products.map((product) => (
-          <Card key={product.id}>
-            <CardContent className="p-4 space-y-2">
-              <h2 className="text-lg font-semibold">{product.name}</h2>
-              <p>Precio: ${product.price}</p>
-              <p>Stock: {product.stock}</p>
-              <Button onClick={() => addToCart(product)}>Agregar</Button>
-            </CardContent>
-          </Card>
+          <div key={product.id} className="border p-4 rounded shadow">
+            <h2 className="text-lg font-semibold">{product.name}</h2>
+            <p>Precio: ${product.price}</p>
+            <p>Stock: {product.stock}</p>
+            <button
+              className="mt-2 px-3 py-1 bg-blue-500 text-white rounded"
+              onClick={() => addToCart(product)}
+            >
+              Agregar
+            </button>
+          </div>
         ))}
       </div>
 
