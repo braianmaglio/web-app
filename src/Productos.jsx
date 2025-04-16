@@ -81,30 +81,8 @@ export default function Productos() {
         style={{ marginBottom: "1rem" }}
       />
 
-      {/* Formulario para agregar un nuevo producto */}
-      <div className="form-agregar">
-        <h3>Agregar Producto</h3>
-        <input
-          type="text"
-          placeholder="Nombre"
-          value={nuevoProducto.nombre}
-          onChange={(e) => setNuevoProducto({ ...nuevoProducto, nombre: e.target.value })}
-        />
-        <input
-          type="number"
-          placeholder="Precio"
-          value={nuevoProducto.precio}
-          onChange={(e) => setNuevoProducto({ ...nuevoProducto, precio: e.target.value })}
-        />
-        <input
-          type="number"
-          placeholder="Stock"
-          value={nuevoProducto.stock}
-          onChange={(e) => setNuevoProducto({ ...nuevoProducto, stock: e.target.value })}
-        />
-        <button onClick={agregarProducto}>🆕 Agregar Producto</button>
-      </div>
-
+     
+ 
       {/* Tabla de productos */}
       <table className="productos-tabla">
         <thead>
@@ -163,6 +141,30 @@ export default function Productos() {
           ))}
         </tbody>
       </table>
+
+      {/* Formulario para agregar un nuevo producto */}
+      <div className="form-agregar">
+        <h3>Agregar Producto</h3>
+        <input
+          type="text"
+          placeholder="Nombre"
+          value={nuevoProducto.nombre}
+          onChange={(e) => setNuevoProducto({ ...nuevoProducto, nombre: e.target.value })}
+        />
+        <input
+          type="number"
+          placeholder="Precio"
+          value={nuevoProducto.precio}
+          onChange={(e) => setNuevoProducto({ ...nuevoProducto, precio: e.target.value })}
+        />
+        <input
+          type="number"
+          placeholder="Stock"
+          value={nuevoProducto.stock}
+          onChange={(e) => setNuevoProducto({ ...nuevoProducto, stock: e.target.value })}
+        />
+        <button onClick={agregarProducto}>🆕 Agregar Producto</button>
+      </div>
     </div>
   );
 }
