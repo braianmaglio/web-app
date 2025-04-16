@@ -1,78 +1,103 @@
-// src/NuevaVenta.jsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "./supabase";
 
-export default function NuevaVenta() {
-  const [productos, setProductos] = useState([]);
-  const [seleccionados, setSeleccionados] = useState([]);
+function NuevaVenta() {
+  const [producto, setProducto] = useState("");
+  const [cantidad, setCantidad] = useState("");
+  const [mensaje, setMensaje] = useState("");
 
-  useEffect(() => {
-    async function cargarProductos() {
-      const { data } = await supabase.from("productos").select("*");
-      setProductos(data);
+  const generarVenta = async () => {
+    if (!producto || !cantidad) {
+      setMensaje("Completa todos los campos.");
+      return;
     }
-    cargarProductos();
-  }, []);
-
-  const agregarProducto = (producto) => {
-    const existente = seleccionados.find((p) => p.id === producto.id);
-    if (existente) {
-      existente.cantidad += 1;
-      setSeleccionados([...seleccionados]);
+  
+    const cantidadInt = parseInt(cantidad);
+  
+    // Buscar producto actual
+    const { data: datosProducto } = await supabase
+      .from("productos")
+      .select("*")
+      .eq("nombre", producto)
+      .single();
+  
+    if (!datosProducto) {
+      setMensaje("Producto no encontrado.");
+      return;
+    }
+  
+    if (cantidadInt > datosProducto.stock) {
+      setMensaje("No hay suficiente stock.");
+      return;
+    }
+  
+    // Registrar venta
+    const { data: ventaData, error: ventaError } = await supabase
+      .from("ventas")
+      .insert([
+        {
+          fecha: new Date().toISOString(),
+          total: cantidadInt * datosProducto.precio,
+        }
+      ])
+      .select();
+  
+    if (ventaError) {
+      setMensaje("❌ Hubo un error al registrar la venta.");
+      return;
+    }
+  
+    const ventaId = ventaData[0].id; // Obtener el id de la venta registrada
+  
+    // Registrar detalle de la venta
+    const { error: detalleError } = await supabase
+      .from("detalle_ventas")
+      .insert([
+        {
+          venta_id: ventaId,  // Relacionamos el detalle con la venta
+          producto_id: datosProducto.id,
+          cantidad: cantidadInt,
+          precio_unitario: datosProducto.precio,
+        }
+      ]);
+  
+    // Actualizar stock
+    const { error: stockError } = await supabase
+      .from("productos")
+      .update({ stock: datosProducto.stock - cantidadInt })
+      .eq("id", datosProducto.id);
+  
+    if (!ventaError && !detalleError && !stockError) {
+      setMensaje("✅ Venta registrada exitosamente.");
     } else {
-      setSeleccionados([...seleccionados, { ...producto, cantidad: 1 }]);
+      setMensaje("❌ Hubo un error al guardar la venta.");
     }
+  
+    setProducto("");
+    setCantidad("");
   };
-
-  const calcularTotal = () =>
-    seleccionados.reduce(
-      (total, prod) => total + prod.precio * prod.cantidad,
-      0
-    );
-
-  const guardarVenta = async () => {
-    const total = calcularTotal();
-    const detalle = seleccionados.map(({ id, nombre, precio, cantidad }) => ({
-      id,
-      nombre,
-      precio,
-      cantidad,
-    }));
-
-    await supabase.from("ventas").insert([{ total, detalle }]);
-    setSeleccionados([]);
-    alert("Venta registrada");
-  };
+  
+  
 
   return (
-    <div>
+    <div className="nuevaVenta-container">
       <h2>Nueva Venta</h2>
-
-      <h4>Productos disponibles:</h4>
-      <table className="table-auto w-full text-left border">
-      <tbody>
-        {productos.map((p) => (
-          <tr key={p.id}>
-            <td className="p-2 border">{p.nombre}</td>
-            <td className="p-2 border">{p.precio}</td>
-               
-            <td className="p-2 border"><button onClick={() => agregarProducto(p)}>Agregar</button></td>
-          </tr>
-        ))}
-      </tbody>
-
-      <h4>Detalle de la venta:</h4>
-      <ul>
-        {seleccionados.map((p) => (
-          <li key={p.id}>
-            {p.nombre} x{p.cantidad} = ${p.precio * p.cantidad}
-          </li>
-        ))}
-      </ul>
-      </table>
-
-      <p><strong>Total:</strong> ${calcularTotal()}</p>
-      <button onClick={guardarVenta}>Guardar Venta</button>
+      <input
+        type="text"
+        placeholder="Producto"
+        value={producto}
+        onChange={(e) => setProducto(e.target.value)}
+      />
+      <input
+        type="number"
+        placeholder="Cantidad"
+        value={cantidad}
+        onChange={(e) => setCantidad(e.target.value)}
+      />
+      <button className="genera-venta" onClick={generarVenta}>Generar Venta</button>
+      {mensaje && <p>{mensaje}</p>}
     </div>
   );
 }
+
+export default NuevaVenta;

@@ -1,0 +1,256 @@
+.inicio-contenedor {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.titulo-principal {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #333;
+  text-align: center;
+}
+
+.opciones-principales {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+.opcion-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem 1rem;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  font-size: 1.2rem;
+}
+
+.opcion-card:hover {
+  background-color: #007bff;
+  color: #fff;
+  transform: translateY(-4px);
+}
+
+.icono {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.opcion-secundaria {
+  width: 100%;
+  max-width: 400px;
+}
+
+.opcion-card.secundaria {
+  background-color: #e5e7eb;
+}
+
+.opcion-card.secundaria:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
+.pagina {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  text-align: center;
+}
+
+.titulo-seccion {
+  font-size: 2rem;
+  color: #222;
+  margin-bottom: 1rem;
+}
+
+.descripcion {
+  color: #555;
+  max-width: 600px;
+  font-size: 1rem;
+}
+
+.productos-container {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.productos-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #1a202c;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.reporte-container {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.reporte-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #1a202c;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.reportes-titulo {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #1a202c;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+  background-color: #f7fafc;
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .reporte-container h2 {
+    font-size: 1.25rem;
+  }
+
+  table, th, td {
+    font-size: 0.875rem;
+    padding: 0.5rem;
+  }
+}
+
+.productos-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.productos-tabla th, .productos-tabla td {
+  padding: 0.8rem;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.productos-tabla th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.productos-tabla input {
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button {
+  margin: 0.2rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+input[type="number"] {
+  width: 80px;
+}
+.form-agregar {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-agregar input {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-agregar button {
+  padding: 0.6rem 1rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-agregar button:hover {
+  background-color: #218838;
+}
+
+.nuevaVenta-container{
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.nuevaVenta-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #1a202c;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.genera-venta{
+  padding: 0.6rem 1rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

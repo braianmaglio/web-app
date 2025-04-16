@@ -1,110 +1,168 @@
+// src/Productos.jsx
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
+import "./estilos.css";
 
-function Productos() {
+export default function Productos() {
   const [productos, setProductos] = useState([]);
-  const [nombre, setNombre] = useState("");
-  const [precio, setPrecio] = useState("");
-  const [stock, setStock] = useState("");
+  const [busqueda, setBusqueda] = useState("");
+  const [editando, setEditando] = useState(null);
+  const [form, setForm] = useState({ nombre: "", precio: "", stock: "" });
+  const [nuevoProducto, setNuevoProducto] = useState({ nombre: "", precio: "", stock: "" });
 
-  const fetchProductos = async () => {
-    const { data, error } = await supabase.from("productos").select("*");
-    if (error) {
-      console.error("Error al cargar productos:", error);
-    } else {
-      setProductos(data);
-    }
-  };
+  async function cargarProductos() {
+    const { data } = await supabase.from("productos").select("*");
+    setProductos(data);
+  }
 
   useEffect(() => {
-    fetchProductos();
+    cargarProductos();
   }, []);
 
-  const handleAgregar = async (e) => {
-    e.preventDefault();
+  const eliminarProducto = async (id) => {
+    const confirmacion = confirm("¿Estás seguro que querés eliminar este producto?");
+    if (!confirmacion) return;
 
-    if (!nombre || !precio || !stock) {
-      alert("Completá todos los campos.");
+    await supabase.from("productos").delete().eq("id", id);
+    await cargarProductos();
+  };
+
+  const iniciarEdicion = (producto) => {
+    setEditando(producto.id);
+    setForm({
+      nombre: producto.nombre,
+      precio: producto.precio,
+      stock: producto.stock,
+    });
+  };
+
+  const guardarCambios = async () => {
+    await supabase.from("productos").update(form).eq("id", editando);
+    setEditando(null);
+    await cargarProductos();
+  };
+
+  const cancelarEdicion = () => {
+    setEditando(null);
+  };
+
+  const productosFiltrados = productos.filter(p =>
+    p.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
+  // Función para agregar un nuevo producto
+  const agregarProducto = async () => {
+    if (!nuevoProducto.nombre || !nuevoProducto.precio || !nuevoProducto.stock) {
+      alert("Por favor, completa todos los campos.");
       return;
     }
 
-    const { error } = await supabase.from("productos").insert([
-      {
-        nombre,
-        precio: parseFloat(precio),
-        stock: parseInt(stock),
-      },
+    const { data, error } = await supabase.from("productos").insert([
+      { nombre: nuevoProducto.nombre, precio: nuevoProducto.precio, stock: nuevoProducto.stock },
     ]);
 
     if (error) {
-      alert("Error al guardar producto.");
-      console.error(error);
+      console.error("Error al agregar producto:", error);
     } else {
-      setNombre("");
-      setPrecio("");
-      setStock("");
-      fetchProductos(); // actualiza la lista
+      setNuevoProducto({ nombre: "", precio: "", stock: "" });  // Limpiar el formulario
+      await cargarProductos();  // Recargar los productos
     }
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl mb-4 font-bold">Agregar Producto</h2>
-      <form onSubmit={handleAgregar} className="mb-6 space-y-4">
+    <div className="productos-container">
+      <h2>Lista de Productos</h2>
+    
+      <input
+        type="text"
+        placeholder="Buscar producto..."
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+        style={{ marginBottom: "1rem" }}
+      />
+
+      {/* Formulario para agregar un nuevo producto */}
+      <div className="form-agregar">
+        <h3>Agregar Producto</h3>
         <input
           type="text"
           placeholder="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          className="border p-2 w-full rounded"
+          value={nuevoProducto.nombre}
+          onChange={(e) => setNuevoProducto({ ...nuevoProducto, nombre: e.target.value })}
         />
         <input
           type="number"
           placeholder="Precio"
-          value={precio}
-          onChange={(e) => setPrecio(e.target.value)}
-          className="border p-2 w-full rounded"
+          value={nuevoProducto.precio}
+          onChange={(e) => setNuevoProducto({ ...nuevoProducto, precio: e.target.value })}
         />
         <input
           type="number"
           placeholder="Stock"
-          value={stock}
-          onChange={(e) => setStock(e.target.value)}
-          className="border p-2 w-full rounded"
+          value={nuevoProducto.stock}
+          onChange={(e) => setNuevoProducto({ ...nuevoProducto, stock: e.target.value })}
         />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Guardar
-        </button>
-      </form>
+        <button onClick={agregarProducto}>🆕 Agregar Producto</button>
+      </div>
 
-      <h2 className="text-xl mb-2 font-bold">Lista de Productos</h2>
-      {productos.length === 0 ? (
-        <p>No hay productos cargados.</p>
-      ) : (
-        <table className="table-auto w-full text-left border">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="p-2 border">Nombre</th>
-              <th className="p-2 border">Precio</th>
-              <th className="p-2 border">Stock</th>
+      {/* Tabla de productos */}
+      <table className="productos-tabla">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {productosFiltrados.map((producto) => (
+            <tr key={producto.id}>
+              {editando === producto.id ? (
+                <>
+                  <td>
+                    <input
+                      value={form.nombre}
+                      onChange={(e) => setForm({ ...form, nombre: e.target.value })}
+                      placeholder="Nombre"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      value={form.precio}
+                      onChange={(e) => setForm({ ...form, precio: e.target.value })}
+                      placeholder="Precio"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      value={form.stock}
+                      onChange={(e) => setForm({ ...form, stock: e.target.value })}
+                      placeholder="Stock"
+                    />
+                  </td>
+                  <td>
+                    <button onClick={guardarCambios}>💾 Guardar</button>
+                    <button onClick={cancelarEdicion}>❌ Cancelar</button>
+                  </td>
+                </>
+              ) : (
+                <>
+                  <td>{producto.nombre}</td>
+                  <td>${producto.precio}</td>
+                  <td>{producto.stock}</td>
+                  <td>
+                    <button onClick={() => iniciarEdicion(producto)}>✏️ Editar</button>
+                    <button onClick={() => eliminarProducto(producto.id)}>🗑️ Eliminar</button>
+                  </td>
+                </>
+              )}
             </tr>
-          </thead>
-          <tbody>
-            {productos.map((producto) => (
-              <tr key={producto.id}>
-                <td className="p-2 border">{producto.nombre}</td>
-                <td className="p-2 border">${producto.precio}</td>
-                <td className="p-2 border">{producto.stock}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
-
-export default Productos;

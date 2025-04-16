@@ -1,34 +1,19 @@
-// src/Reportes.jsx
-import { useEffect, useState } from "react";
-import { supabase } from "./supabase";
+import React from "react";
+import ReporteVentasTotales from "./ReporteVentasTotales";
+import ReporteVentasPorProducto from "./ReporteVentasPorProducto";
 
-export default function Reportes() {
-  const [ventas, setVentas] = useState([]);
-
-  useEffect(() => {
-    async function cargarVentas() {
-      const { data } = await supabase.from("ventas").select("*").order("fecha", { ascending: false });
-      setVentas(data);
-    }
-    cargarVentas();
-  }, []);
-
+function Reportes() {
   return (
     <div>
-      <h2>Reporte de Ventas</h2>
-      {ventas.map((venta) => (
-        <div key={venta.id} style={{ border: "1px solid #ccc", padding: 10, marginBottom: 10 }}>
-          <p><strong>Fecha:</strong> {new Date(venta.fecha).toLocaleString()}</p>
-          <p><strong>Total:</strong> ${venta.total}</p>
-          <ul>
-            {venta.detalle.map((item, index) => (
-              <li key={index}>
-                {item.nombre} x{item.cantidad} = ${item.precio * item.cantidad}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      <h2 className="reportes-titulo">Reportes</h2>
+      <div id="reporte-productos">
+        <ReporteVentasPorProducto />
+      </div>
+      <div id="reporte-totales">
+        <ReporteVentasTotales />
+      </div>
     </div>
   );
 }
+
+export default Reportes;

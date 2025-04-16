@@ -1,5 +1,5 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
 import Navbar from "./Navbar";
 import Inicio from "./Inicio";
 import Productos from "./Productos";
@@ -10,6 +10,7 @@ function App() {
   return (
     <Router>
       <Navbar />
+
       <div className="p-4">
         <Routes>
           <Route path="/" element={<Inicio />} />
@@ -23,4 +24,5 @@ function App() {
 }
 
 export default App;
+
  
