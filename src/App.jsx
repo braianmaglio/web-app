@@ -5,6 +5,8 @@ import Inicio from "./Inicio";
 import Productos from "./Productos";
 import NuevaVenta from "./NuevaVenta";
 import Reportes from "./Reportes";
+import ReporteVentasPorProducto from "./ReporteVentasPorProducto";
+
 
 function App() {
   return (
