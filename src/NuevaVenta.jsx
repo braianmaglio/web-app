@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
-
+import "./estilos.css";
 function NuevaVenta() {
   const [producto, setProducto] = useState("");
   const [cantidad, setCantidad] = useState("");
@@ -81,23 +81,26 @@ function NuevaVenta() {
 
   return (
     <div className="nuevaVenta-container">
-      <h2>Nueva Venta</h2>
-      <input
-        type="text"
-        placeholder="Producto"
-        value={producto}
-        onChange={(e) => setProducto(e.target.value)}
-      />
-      <input
-        type="number"
-        placeholder="Cantidad"
-        value={cantidad}
-        onChange={(e) => setCantidad(e.target.value)}
-      />
-      <button className="genera-venta" onClick={generarVenta}>Generar Venta</button>
-      {mensaje && <p>{mensaje}</p>}
+        <div>
+        <h2>Nueva Venta</h2>
+        <input
+          type="text"
+          placeholder="Producto"
+          value={producto}
+          onChange={(e) => setProducto(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Cantidad"
+          value={cantidad}
+          onChange={(e) => setCantidad(e.target.value)}
+        />
+        <button className="genera-venta" onClick={generarVenta}>Generar Venta</button>
+        {mensaje && <p>{mensaje}</p>}
+      </div>
     </div>
   );
+
 }
 
 export default NuevaVenta;
