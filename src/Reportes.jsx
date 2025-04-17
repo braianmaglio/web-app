@@ -8,9 +8,22 @@ function Reportes() {
   const [mensaje, setMensaje] = useState("");
 
   useEffect(() => {
-    cargarDatos();
+    const obtenerHistorial = async () => {
+      const { data, error } = await supabase
+        .from("ventas")
+        .select("fecha, cantidad, total, productos(nombre)")
+        .order("fecha", { ascending: false });
+  
+      if (error) {
+        setMensaje("Error al obtener el historial de ventas.");
+      } else {
+        setHistorial(data);
+      }
+    };
+  
+    obtenerHistorial();
   }, []);
-
+  
   const cargarDatos = async () => {
     // Reporte por producto
     const { data: rptProd, error: error1 } = await supabase.rpc("reporte_ventas_por_producto");
@@ -23,10 +36,25 @@ function Reportes() {
     else setVentasTotales(rptTotal);
 
     // Historial
+    const obtenerHistorial = async () => {
+      const { data, error } = await supabase
+        .from("ventas")
+        .select("fecha, cantidad, total, productos(nombre)")
+        .order("fecha", { ascending: false });
+  
+      if (error) {
+        setMensaje("Error al obtener el historial de ventas.");
+      } else {
+        setHistorial(data);
+      }
+    };
+  
+    obtenerHistorial();
     const { data: ventasHist, error: error3 } = await supabase
       .from("ventas")
       .select("fecha, cantidad, total, productos(nombre)")
       .order("fecha", { ascending: false });
+
 
     if (error3) setMensaje("❌ Error cargando historial");
     else setHistorial(ventasHist);
@@ -76,6 +104,7 @@ function Reportes() {
             <tbody>
               {ventasPorProducto.map((venta, i) => (
                 <tr key={i} className="text-center">
+                  <td className="p-2 border">{venta.productos?.nombre || "Sin nombre"}</td>
                   <td className="p-2 border">{venta.nombre}</td>
                   <td className="p-2 border">${venta.total_vendido}</td>
                 </tr>
